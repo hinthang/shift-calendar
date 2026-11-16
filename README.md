@@ -49,10 +49,11 @@ GitHub Pages (index.html)  ──POST + PIN──▶  Apps Script /exec (Code.gs
 
 ## เข้าใช้ครั้งแรก
 
-เปิด https://hinthang.github.io/shift-calendar/ → วาง Web app URL และ PIN → **เข้าใช้งาน**
+เปิด https://hinthang.github.io/shift-calendar/ → กรอก PIN → **เข้าใช้งาน**
 แต่ละเครื่องกรอกครั้งเดียว ปุ่ม **ออก** มุมบนใช้ลบ PIN ออกจากเครื่อง
 
-> อยากให้ไม่ต้องกรอก URL: ใส่ลิงก์ไว้ในค่าคงที่ `API_URL` ใน `index.html` (ยังต้องกรอก PIN)
+> ลิงก์ `/exec` ใส่ไว้ในค่าคงที่ `API_URL` ใน `index.html` แล้ว แต่ละเครื่องกรอกแค่ PIN
+> ถ้า deploy ใหม่แบบ New deployment (ได้ลิงก์ใหม่) ต้องแก้ `API_URL` ตาม
 
 ## อัปเดตโค้ด
 

@@ -469,7 +469,7 @@ function toast(msg){ const t = document.getElementById('toast'); t.textContent =
  * เปิดจาก GitHub Pages → ส่งคำขอไปที่ Apps Script Web app URL (/exec) พร้อม PIN
  *   ใส่ URL ไว้ใน API_URL ด้านล่างได้เลย หรือปล่อยว่างแล้วกรอกในหน้าตั้งค่าครั้งแรก
  */
-const API_URL = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzmT8JvO1mZyhp10qMdKLA_yQAsQz_oVcympLr4x1B9oExYk2ZoLKotXHjsAE-gqsxp3Q/exec';
 const IN_GAS = !!(window.google && google.script && google.script.run);
 const store = {
   get(k){ try { return localStorage.getItem(k) || ''; } catch(e){ return ''; } },
