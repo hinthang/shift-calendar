@@ -26,14 +26,38 @@
 | หักภาษี | 10% ของยอดรวม |
 | ประกันสังคม | 850 / เดือน (เฉพาะเดือนที่มีรายได้) |
 
-## ติดตั้ง
+## เปิดใช้งาน
+
+**ลิงก์เว็บ:** https://hinthang.github.io/shift-calendar/
+
+หน้าเว็บอยู่บน GitHub Pages ส่วนข้อมูลเก็บใน Google Sheet โดยมี Apps Script เป็นตัวรับส่งข้อมูล (ล็อกด้วย PIN)
+
+```
+GitHub Pages (index.html)  ──POST + PIN──▶  Apps Script /exec (Code.gs)  ──▶  Google Sheet
+```
+
+## ติดตั้งฝั่ง Google (ทำครั้งเดียว)
 
 1. สร้าง Google Sheet ใหม่ → **ส่วนขยาย → Apps Script**
-2. วางโค้ด `Code.gs` และสร้างไฟล์ HTML ชื่อ `Index` แล้ววาง `Index.html`
+2. วางโค้ด `Code.gs` และสร้างไฟล์ HTML ชื่อ `Index` แล้ววางเนื้อหาจาก `index.html`
 3. เลือกฟังก์ชัน `setupMonthlyHolidaySync` แล้วกด **Run** หนึ่งครั้ง (อนุญาตสิทธิ์)
-4. **Deploy → New deployment → Web app** (Execute as: Me)
+4. **Deploy → New deployment → Web app**
+   - Execute as: **Me**
+   - Who has access: **Anyone** (ต้องเป็น Anyone ไม่ใช่ Anyone with Google account ไม่งั้น GitHub Pages เรียกไม่ได้)
+5. เปิดชีต **Settings** ใส่ PIN ในแถว `api_pin`
+6. คัดลอก **Web app URL** (ลงท้าย `/exec`)
 
-อัปเดตโค้ดครั้งต่อไป: **Deploy → Manage deployments → ✏️ → New version**
+## เข้าใช้ครั้งแรก
+
+เปิด https://hinthang.github.io/shift-calendar/ → วาง Web app URL และ PIN → **เข้าใช้งาน**
+แต่ละเครื่องกรอกครั้งเดียว ปุ่ม **ออก** มุมบนใช้ลบ PIN ออกจากเครื่อง
+
+> อยากให้ไม่ต้องกรอก URL: ใส่ลิงก์ไว้ในค่าคงที่ `API_URL` ใน `index.html` (ยังต้องกรอก PIN)
+
+## อัปเดตโค้ด
+
+- แก้ `index.html` → push ขึ้น GitHub, Pages อัปเดตเองใน 1–2 นาที
+- แก้ `Code.gs` → วางใน Apps Script แล้ว **Deploy → Manage deployments → ✏️ → New version** (ลิงก์ `/exec` เดิมใช้ต่อได้)
 
 ## ชีตที่ระบบสร้างให้
 
@@ -41,5 +65,5 @@
 |---|---|
 | Shifts | วันที่, รหัสเวร (คั่นด้วย `,`), หมายเหตุ |
 | Holidays | วันหยุดราชการ (`auto` / `manual` / `removed`) |
-| Settings | อัตราค่าเวร, ภาษี, ประกันสังคม |
+| Settings | อัตราค่าเวร, ภาษี, ประกันสังคม, `api_pin` |
 | Log | ประวัติการแก้ไข |

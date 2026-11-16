@@ -54,6 +54,37 @@ function doGet() {
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
+/* ---------- API สำหรับหน้าเว็บบน GitHub Pages ----------
+ * หน้าเว็บส่ง POST (Content-Type: text/plain) มาที่ URL /exec
+ *   body = {"fn":"getAll","args":[],"pin":"1234"}
+ * ตอบกลับเป็น JSON {"ok":true,"data":...} หรือ {"ok":false,"error":"..."}
+ * ต้องตั้ง PIN ในชีต Settings แถว api_pin ก่อน ไม่งั้นจะปฏิเสธทุกคำขอ
+ */
+const API_FNS = {
+  getAll: getAll, syncHolidaysNow: syncHolidaysNow, setShift: setShift,
+  toggleHoliday: toggleHoliday, saveRates: saveRates
+};
+
+function doPost(e) {
+  let out;
+  try {
+    setup_();
+    const req = JSON.parse((e && e.postData && e.postData.contents) || '{}');
+    const pin = String(getSetting_('api_pin') || '').trim();
+    if (!pin) throw new Error('NO_PIN: ยังไม่ได้ตั้ง PIN — ใส่ค่าในชีต Settings แถว api_pin');
+    if (String(req.pin || '').trim() !== pin) {
+      Utilities.sleep(800); // กันเดา PIN รัว ๆ
+      throw new Error('BAD_PIN: PIN ไม่ถูกต้อง');
+    }
+    const fn = API_FNS[req.fn];
+    if (!fn) throw new Error('ไม่รู้จักคำสั่ง: ' + req.fn);
+    out = { ok: true, data: fn.apply(null, req.args || []) };
+  } catch (err) {
+    out = { ok: false, error: String(err && err.message || err) };
+  }
+  return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
+}
+
 /* ---------- Setup ---------- */
 
 function ss_() { return SS_ID ? SpreadsheetApp.openById(SS_ID) : SpreadsheetApp.getActiveSpreadsheet(); }
@@ -77,6 +108,7 @@ function setup_() {
     sh.getRange(1, 1, 1, h.length).setValues([h]).setFontWeight('bold');
     sh.setFrozenRows(1);
     if (n !== 'Settings') sh.getRange('A:B').setNumberFormat('@');
+    if (n === 'Settings') sh.appendRow(['api_pin', '', 'PIN สำหรับเปิดจาก GitHub Pages (ตั้งเป็นตัวเลขหรือคำที่เดายาก)']);
   });
 }
 
