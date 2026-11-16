@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-1:#3ea6e6; --sky-2:#8fd3f6; --sky-3:#d8f1fd;
+    --hill-1:#7cc95a; --hill-2:#4fa83d; --hill-3:#2f7d32;
+    --ink:#12324a; --muted:#5b7183; --line:#e3ecf3;
+    --card:#ffffff; --bg:#eef7fc;
+    --accent:#f2683a; --accent-ink:#ffffff; --accent-soft:#fff0e9;
+    --bd:#2563eb; --bd-soft:#e6efff;
+    --cbd:#b45309; --cbd-soft:#fff3d6;
+    --off:#be123c; --off-soft:#ffe8ee;
+    --hol:#fff8ec; --we:#f7fbfe;
+    --ok:#15803d; --bad:#dc2626;
+    --radius:20px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
+  button,select,input{font:inherit;color:inherit}
+  button{cursor:pointer}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .ico{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;overflow:hidden;color:#fff;
+    background:linear-gradient(180deg,var(--sky-1) 0%,var(--sky-2) 58%,var(--sky-3) 100%);
+    padding:0 16px 230px}
+  .hero svg.scene{position:absolute;inset:auto 0 0 0;width:100%;height:240px;display:block}
+  .cloud{position:absolute;background:#fff;border-radius:999px;opacity:.95}
+  .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+  .c1{width:110px;height:30px;top:96px;left:6%}
+  .c1::before{width:50px;height:50px;top:-24px;left:18px}.c1::after{width:38px;height:38px;top:-16px;left:56px}
+  .c2{width:140px;height:34px;top:400px;right:8%}
+  .c2::before{width:60px;height:60px;top:-30px;left:26px}.c2::after{width:44px;height:44px;top:-20px;left:74px}
+  .c3{width:80px;height:22px;top:118px;right:30%;opacity:.8}
+  .c3::before{width:36px;height:36px;top:-18px;left:14px}.c3::after{width:28px;height:28px;top:-12px;left:40px}
+  /* ---------- motion ---------- */
+  .birds{position:absolute;top:360px;left:0;width:100%;height:80px;pointer-events:none;z-index:1}
+  .bird{position:absolute;left:-60px;width:28px;height:14px;stroke:#12324a;stroke-width:2.2;fill:none;stroke-linecap:round;opacity:.55}
+  .layer{transform:translateY(calc(var(--p,0) * var(--d,0) * 1px));transition:transform .1s linear}
+  .sway{transform-box:fill-box;transform-origin:50% 100%}
+  .rays{transform-box:fill-box;transform-origin:center}
+  @media (prefers-reduced-motion:no-preference){
+    .c1{animation:sail 70s linear infinite;animation-delay:-20s}
+    .c2{animation:sail 95s linear infinite;animation-delay:-60s}
+    .c3{animation:sail 55s linear infinite;animation-delay:-5s}
+    .c1,.c2,.c3{left:0;right:auto}
+    @keyframes sail{from{transform:translateX(-180px)}to{transform:translateX(calc(100vw + 40px))}}
+
+    .bird{animation:fly 22s linear infinite}
+    .bird.b2{top:18px;animation-delay:-3s;animation-duration:24s;transform:scale(.8)}
+    .bird.b3{top:34px;animation-delay:-5.5s;animation-duration:26s;transform:scale(.65)}
+    .bird.b4{top:8px;animation-delay:-12s;animation-duration:30s}
+    .bird path{animation:flap .5s ease-in-out infinite alternate;transform-origin:center;transform-box:fill-box}
+    @keyframes fly{0%{translate:0 0}25%{translate:30vw -14px}50%{translate:60vw 6px}75%{translate:85vw -10px}100%{translate:calc(100vw + 120px) 0}}
+    @keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(.35)}}
+
+    .rays{animation:spin 40s linear infinite}
+    .sun-core{animation:glow 4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes glow{from{transform:scale(1)}to{transform:scale(1.07)}}
+
+    .sway{animation:sway 3.6s ease-in-out infinite alternate}
+    .sway.s2{animation-duration:4.4s;animation-delay:-1s}
+    .sway.s3{animation-duration:3.1s;animation-delay:-2s}
+    @keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+
+    .smoke circle{animation:puff 3.2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+    .smoke circle:nth-child(2){animation-delay:1.1s}.smoke circle:nth-child(3){animation-delay:2.2s}
+    @keyframes puff{0%{opacity:0;transform:translate(0,0) scale(.6)}20%{opacity:.8}100%{opacity:0;transform:translate(14px,-34px) scale(1.6)}}
+
+    .flag{animation:wave 1.4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:0 50%}
+    @keyframes wave{from{transform:skewY(-6deg) scaleX(.92)}to{transform:skewY(6deg) scaleX(1)}}
+
+    .hero-copy > *{opacity:0;animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards}
+    .hero-copy > :nth-child(2){animation-delay:.08s}
+    .hero-copy > :nth-child(3){animation-delay:.16s}
+    .hero-copy > :nth-child(4){animation-delay:.26s}
+    @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    main{animation:rise .8s .3s cubic-bezier(.2,.8,.2,1) both}
+  }
+
+  .topbar{position:relative;z-index:3;max-width:1200px;margin:16px auto 0;background:rgba(255,255,255,.96);
+    color:var(--ink);border-radius:999px;padding:8px 8px 8px 18px;display:flex;align-items:center;gap:10px;
+    box-shadow:0 6px 24px rgba(18,50,74,.12)}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+  .brand .logo{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#ffb057);
+    display:grid;place-items:center;color:#fff}
+  .brand .logo .ico{width:16px;height:16px}
+  .tools{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+  .tbtn{display:inline-flex;align-items:center;gap:6px;border:none;background:none;border-radius:999px;
+    padding:8px 12px;font-weight:500;color:var(--ink);min-height:40px;transition:background .15s}
+  .tbtn:hover{background:#eef5fa}
+  .tbtn.cta{background:var(--ink);color:#fff}
+  .tbtn.cta:hover{background:#0b2233}
+
+  .hero-copy{position:relative;z-index:2;text-align:center;max-width:760px;margin:44px auto 0}
+  .pill{display:inline-block;background:rgba(18,50,74,.82);color:#fff;font-size:12px;font-weight:600;
+    letter-spacing:.8px;border-radius:999px;padding:4px 12px;text-transform:uppercase}
+  .hero h1{font-family:'Noto Serif Thai',serif;font-weight:700;font-size:clamp(30px,5vw,52px);line-height:1.2;
+    margin:14px 0 6px;text-shadow:0 2px 14px rgba(18,50,74,.35)}
+  .hero p.lead{margin:0 auto;max-width:520px;opacity:.95;font-size:16px}
+
+  .monthbar{display:inline-flex;align-items:center;gap:4px;margin-top:22px;background:#fff;color:var(--ink);
+    border-radius:999px;padding:6px;box-shadow:0 8px 28px rgba(18,50,74,.18)}
+  .monthbar .m{min-width:170px;text-align:center;font-weight:700;font-size:17px}
+  .icon-btn{width:40px;height:40px;border-radius:50%;border:none;background:#f0f6fa;display:grid;place-items:center;transition:background .15s}
+  .icon-btn:hover{background:#e1eef6}
+  .today-btn{border:none;background:var(--accent);color:var(--accent-ink);font-weight:600;border-radius:999px;
+    padding:9px 18px;min-height:40px;transition:filter .15s}
+  .today-btn:hover{filter:brightness(1.06)}
+
+  /* ---------- content ---------- */
+  main{position:relative;z-index:4;max-width:1200px;margin:-64px auto 0;padding:0 16px 48px}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+  @media (max-width:960px){.layout{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:0 10px 30px rgba(18,50,74,.08)}
+  .card h2{font-family:'Noto Serif Thai',serif;font-size:19px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--muted);margin:0 0 10px 2px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+  .grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+  .dow{text-align:center;font-weight:600;color:var(--muted);font-size:13px;padding:2px 0 4px}
+  .dow.we{color:var(--cbd)}
+  .day{background:#fff;border:1px solid var(--line);border-radius:14px;min-height:124px;padding:6px;cursor:pointer;
+    display:flex;flex-direction:column;gap:2px;position:relative;text-align:left;
+    transition:border-color .15s, box-shadow .15s, transform .15s}
+  .day:hover{border-color:#bcd6e8;box-shadow:0 4px 14px rgba(18,50,74,.08)}
+  @media (prefers-reduced-motion:no-preference){.day:hover{transform:translateY(-1px)}}
+  .day.we{background:var(--we)}
+  .day.hol{background:var(--hol)}
+  .day.off{background:var(--off-soft)}
+  .day.other{opacity:.38}
+  .day.today{border:2px solid var(--accent)}
+  .day.conflict{border:2px solid var(--bad)}
+  .num{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:15px;margin-bottom:2px}
+  .type{font-size:11px;font-weight:700;border-radius:999px;padding:1px 8px;background:var(--bd-soft);color:var(--bd)}
+  .type.cbd{background:var(--cbd-soft);color:var(--cbd)}
+  .type.off{background:#fff;color:var(--off)}
+  .slot{display:flex;align-items:center;gap:4px;font-size:12px;line-height:1.3;min-width:0}
+  .slot b{color:var(--muted);font-size:10px;width:10px;flex:none;font-weight:600}
+  .slot span{border-radius:6px;color:#fff;padding:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-weight:500}
+  .slot span.none{color:#c4d2dc;background:none;padding:0}
+  .offtxt{color:var(--off);font-size:13px;font-weight:600;margin-top:8px;text-align:center}
+  .hname{font-size:10.5px;color:var(--cbd);font-weight:600;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hname::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:4px;vertical-align:1px}
+  .note{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .warn{position:absolute;right:6px;bottom:5px;width:16px;height:16px;border-radius:50%;background:var(--bad);color:#fff;
+    font-size:11px;font-weight:700;display:grid;place-items:center}
+
+  /* summary */
+  .seg{display:inline-flex;background:#f0f6fa;border-radius:999px;padding:4px;margin-bottom:10px}
+  .seg button{border:none;background:none;border-radius:999px;padding:6px 14px;font-weight:600;color:var(--muted);min-height:36px}
+  .seg button.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(18,50,74,.1)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:8px 4px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:600;font-size:12.5px}
+  tfoot td{font-weight:700;border-bottom:none}
+  tr.ded td{font-size:12px;color:var(--muted);text-align:left;padding-top:0;font-weight:400}
+  tbody tr:has(+ tr.ded) td{border-bottom:none}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .money{color:var(--ok);font-weight:700}
+  .rates{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6;background:#f6fafc;border-radius:12px;padding:10px 12px}
+  #syncInfo{background:none;padding:0 2px}
+
+  /* dialogs */
+  dialog{border:none;border-radius:22px;padding:0;width:min(460px,94vw);box-shadow:0 24px 60px rgba(18,50,74,.3);color:var(--ink)}
+  dialog::backdrop{background:rgba(12,34,51,.5)}
+  .dlg{padding:20px}
+  .dlg h3:focus{outline:none}
+  .dlg h3{font-family:'Noto Serif Thai',serif;margin:0 0 4px;font-size:20px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:12px}
+  label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px;font-weight:500}
+  .dlg select,.dlg input[type=text],.dlg input[type=number]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;min-height:44px}
+  .types{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:#f0f6fa;border-radius:999px;padding:4px}
+  .types button{border:none;background:none;border-radius:999px;padding:10px 4px;font-weight:600;color:var(--muted);min-height:44px}
+  .types button.on.duty{background:#fff;color:var(--bd);box-shadow:0 2px 6px rgba(18,50,74,.1)}
+  .types button.on.off{background:#fff;color:var(--off);box-shadow:0 2px 6px rgba(18,50,74,.1)}
+  .slots{display:grid;grid-template-columns:56px 1fr;gap:8px;align-items:center;margin-top:6px}
+  .slots div{font-weight:600;font-size:14px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .row .grow{flex:1}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font-weight:600;min-height:44px;transition:background .15s}
+  .btn:hover{background:#f4f8fb}
+  .btn.pri,.dlg button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.pri:hover,.dlg button.pri:hover{filter:brightness(1.05)}
+  .dlg button.danger{color:var(--bad);border-color:#fecaca}
+  .dlg .row > button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 16px;font-weight:600;min-height:44px}
+  .dlg .row > button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+  .dlg .row > button.danger{color:var(--bad);border-color:#fecaca}
+  .calc{background:#f6fafc;border-radius:12px;padding:10px 12px;font-size:14px;margin-top:12px;line-height:1.7}
+  .staff-row{display:grid;grid-template-columns:1fr 46px 64px 40px;gap:6px;align-items:center;margin-bottom:8px}
+  .staff-row input[type=color]{width:46px;height:44px;border:1px solid var(--line);border-radius:12px;padding:3px;background:#fff}
+  .staff-row label{margin:0;display:flex;gap:4px;align-items:center;font-size:12px}
+  .staff-row > button{border:1px solid var(--line);background:#fff;border-radius:12px;height:44px}
+  #staffDlg .dlg > button{border:1px dashed #bcd6e8;background:#f6fafc;border-radius:12px;padding:10px;width:100%;font-weight:600;color:var(--muted)}
+
+  #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;
+    padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
+  #toast.show{opacity:1}
+  #loading{position:fixed;inset:0;background:rgba(238,247,252,.7);display:none;align-items:center;justify-content:center;z-index:40;font-weight:600}
+
+  @media (max-width:720px){
+    .tbtn span{display:none}
+    .tbtn{padding:8px 10px}
+    .hero{padding-bottom:170px}
+    .hero-copy{margin-top:28px}
+    .c2,.c3{display:none}
+    .c1{top:64px;left:-30px;opacity:.6}
+    .hero p.lead{font-size:14px}
+    .hero svg.scene{height:170px}
+    .monthbar .m{min-width:130px;font-size:15px}
+    main{margin-top:-40px;padding:0 8px 40px}
+    .card{padding:10px;border-radius:16px}
+    .grid{gap:3px}
+    .day{min-height:100px;padding:3px;border-radius:10px}
+    .slot{font-size:10px}
+    .slot b,.note,.hname,.type{display:none}
+  }
+  @media print{
+    .hero{background:none;color:var(--ink);padding:0}
+    .hero svg.scene,.cloud,.birds,.topbar,.monthbar button,.noprint{display:none!important}
+    main{margin:0}
+    .layout{grid-template-columns:1fr}
+    .card{box-shadow:none}
+  }
+  /* ---------- single-person additions ---------- */
+  .day{min-height:96px}
+  .codes{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+  .code{align-self:flex-start;border-radius:10px;padding:4px 8px;font-weight:700;font-size:14px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;color:#fff;letter-spacing:.3px}
+  .code.bd{background:var(--bd)} .code.cbd{background:var(--cbd)} .code.ch{background:#0891b2} .code.unit{background:#475569} .code.e{background:#7c3aed} .code.m{background:#0e9f6e}
+  .code.leave{background:#fff;color:var(--off);border:1px solid #fecdd3}
+  .wd{font-size:10.5px;color:var(--muted);margin-top:auto}
+  .wd::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#94a3b8;margin-right:4px;vertical-align:1px}
+  .day.leave{background:var(--off-soft)}
+  .picker{display:grid;grid-template-columns:64px repeat(4,1fr);gap:6px;align-items:center}
+  .picker .lab{font-weight:700;font-size:14px}
+  .picker button{--c:#64748b;--soft:#f1f5f9;position:relative;border:1.5px solid transparent;background:var(--soft);color:var(--c);
+    border-radius:12px;min-height:46px;font-weight:700;font-size:15px;transition:background .15s,color .15s,transform .15s,box-shadow .15s}
+  .picker button:hover{border-color:var(--c)}
+  .picker .bd{--c:var(--bd);--soft:var(--bd-soft)}
+  .picker .cbd{--c:var(--cbd);--soft:var(--cbd-soft)}
+  .picker .ch{--c:#0891b2;--soft:#e0f5fa}
+  .picker .e{--c:#7c3aed;--soft:#f1e9ff}
+  .picker .m{--c:#0e9f6e;--soft:#e3f7ee}
+  .picker button.on{background:var(--c);color:#fff;border-color:var(--c);box-shadow:0 6px 16px -6px var(--c);transform:scale(1.05)}
+  .picker button.on::after,.leave-btn.on::after{content:"";position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;
+    background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315803d' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/12px no-repeat;
+    box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .leave-btn{position:relative;background:var(--off-soft)!important;color:var(--off)!important;border-color:transparent!important}
+  .leave-btn:hover{border-color:var(--off)!important}
+  .unit-btn{position:relative;background:#e8edf3!important;color:#475569!important;border-color:transparent!important}
+  .unit-btn:hover{border-color:#475569!important}
+  .unit-btn.on{background:#475569!important;color:#fff!important;box-shadow:0 6px 16px -6px #475569}
+  .unit-btn.on::after{content:"";position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;
+    background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315803d' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/12px no-repeat;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .leave-btn.on{background:var(--off)!important;color:#fff!important;box-shadow:0 6px 16px -6px var(--off)}
+  .choice{display:flex;align-items:center;gap:8px;margin-top:14px;padding:10px 12px;border-radius:12px;background:#f6fafc;font-size:14px;color:var(--muted)}
+  .choice b{font-size:16px;color:var(--ink)}
+  .choice{flex-wrap:wrap}
+  .choice .chip{border-radius:8px;padding:2px 10px;color:#fff;font-weight:700}
+  .dlg .row > button.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+  .dlg .row > button.ok:disabled{opacity:.45;cursor:not-allowed}
+  .lab.ch{color:#0891b2}
+  .lab.bd{color:var(--bd)} .lab.cbd{color:var(--cbd)} .lab.e{color:#7c3aed} .lab.m{color:#0e9f6e}
+  .breakdown td{border-bottom:1px dashed var(--line)}
+  .breakdown td:nth-child(2){color:var(--muted);text-align:center}
+  .breakdown tr.sum td{border-bottom:none;font-weight:700;border-top:1px solid var(--line)}
+  .breakdown tr.neg td:last-child{color:var(--bad)}
+  .net{display:flex;justify-content:space-between;align-items:baseline;background:linear-gradient(135deg,#e9f9ef,#f3fbf6);
+    border-radius:16px;padding:14px 16px;margin-top:12px}
+  .net b{font-size:26px;color:var(--ok);font-variant-numeric:tabular-nums}
+  .counts{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+  .counts span{font-size:12.5px;border-radius:999px;padding:3px 10px;background:#f0f6fa;font-weight:600}
+  @media (max-width:720px){ .code{font-size:11px;padding:2px 5px;border-radius:7px} .wd{display:none} .picker{grid-template-columns:48px repeat(4,1fr)} }
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+
+  <nav class="topbar" aria-label="เมนู">
+    <div class="brand">
+      <span class="logo"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></span>
+      ตารางเวร
+    </div>
+    <div class="tools">
+      <button class="tbtn" onclick="doSync()" aria-label="อัปเดตวันหยุดราชการ">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg><span>อัปเดตวันหยุด</span></button>
+      <button class="tbtn" onclick="openRates()" aria-label="ตั้งค่าเวร">
+        <svg class="ico" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg><span>ค่าเวร</span></button>
+            <button class="tbtn cta" onclick="window.print()" aria-label="พิมพ์ตาราง">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg><span>พิมพ์</span></button>
+    </div>
+  </nav>
+
+  <div class="hero-copy">
+    <span class="pill">ปฏิทินเวรของฉัน</span>
+    <h1>ตารางเวรประจำเดือน</h1>
+    <p class="lead">แตะวันในปฏิทินเพื่อลงเวร บด · ชบด · ช · E · M · ออกหน่วย ระบบรวมยอดเงินสุทธิให้อัตโนมัติ</p>
+    <div class="monthbar">
+      <button class="icon-btn" onclick="move(-1)" aria-label="เดือนก่อน"><svg class="ico" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="m" id="title" aria-live="polite"></div>
+      <button class="icon-btn" onclick="move(1)" aria-label="เดือนถัดไป"><svg class="ico" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+      <button class="today-btn" onclick="goToday()">วันนี้</button>
+    </div>
+  </div>
+
+  <!-- ภาพวิว (วาดเอง) -->
+  <div class="birds" aria-hidden="true">
+    <svg class="bird b1" viewBox="0 0 28 14"><path d="M2 10 Q8 2 14 9 Q20 2 26 10"/></svg>
+    <svg class="bird b2" viewBox="0 0 28 14"><path d="M2 10 Q8 2 14 9 Q20 2 26 10"/></svg>
+    <svg class="bird b3" viewBox="0 0 28 14"><path d="M2 10 Q8 2 14 9 Q20 2 26 10"/></svg>
+    <svg class="bird b4" viewBox="0 0 28 14"><path d="M2 10 Q8 2 14 9 Q20 2 26 10"/></svg>
+  </div>
+  <svg class="scene" viewBox="0 0 1440 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <g class="layer" style="--d:-.05">
+      <g class="rays" stroke="#ffe08a" stroke-width="4" stroke-linecap="round" opacity=".7">
+        <path d="M1180 6v-14M1180 114v14M1126 60h-14M1234 60h14M1142 22l-10-10M1218 98l10 10M1218 22l10-10M1142 98l-10 10"/>
+      </g>
+      <circle class="sun-core" cx="1180" cy="60" r="40" fill="#ffe08a"/>
+    </g>
+    <path class="layer" style="--d:-.03" d="M0 150 C 180 90 320 120 470 140 S 760 80 920 120 S 1240 150 1440 100 V260 H0Z" fill="#a8dcf0"/>
+    <path class="layer" style="--d:-.06" d="M0 170 C 160 130 300 150 420 165 S 700 120 880 150 S 1200 175 1440 140 V260 H0Z" fill="var(--hill-1)"/>
+    <g class="layer" style="--d:-.06">
+      <g class="sway"><circle cx="240" cy="150" r="16" fill="#2f7d32"/><rect x="237" y="160" width="6" height="18" fill="#6b4b2a"/></g>
+      <g class="sway s2"><circle cx="270" cy="156" r="12" fill="#2f7d32"/><rect x="268" y="164" width="4" height="14" fill="#6b4b2a"/></g>
+      <g class="sway s3"><circle cx="1010" cy="146" r="18" fill="#2f7d32"/><rect x="1007" y="158" width="6" height="20" fill="#6b4b2a"/></g>
+      <g class="sway s2"><circle cx="1300" cy="150" r="14" fill="#2f7d32"/><rect x="1298" y="160" width="5" height="16" fill="#6b4b2a"/></g>
+    </g>
+    <path class="layer" style="--d:-.09" d="M0 200 C 200 170 380 185 560 195 S 900 165 1100 185 S 1320 200 1440 185 V260 H0Z" fill="var(--hill-2)"/>
+    <g class="layer" style="--d:-.09">
+      <g transform="translate(640 118)">
+        <g class="smoke" fill="#ffffff"><circle cx="104" cy="2" r="5"/><circle cx="104" cy="2" r="5"/><circle cx="104" cy="2" r="5"/></g>
+        <rect x="98" y="4" width="10" height="16" fill="#c2512a"/>
+        <line x1="20" y1="-14" x2="20" y2="10" stroke="#12324a" stroke-width="2"/>
+        <path class="flag" d="M21 -14 h16 l-4 5 l4 5 h-16z" fill="#f2683a"/>
+        <rect x="0" y="22" width="120" height="58" rx="4" fill="#fff"/>
+        <path d="M-8 26 L60 -4 L128 26Z" fill="#f2683a"/>
+        <rect x="50" y="44" width="20" height="36" rx="2" fill="#3ea6e6"/>
+        <rect x="14" y="38" width="22" height="16" rx="2" fill="#bfe6fa"/>
+        <rect x="84" y="38" width="22" height="16" rx="2" fill="#bfe6fa"/>
+        <rect x="54" y="6" width="12" height="12" fill="#fff"/>
+        <path d="M60 8v8M56 12h8" stroke="#dc2626" stroke-width="2.4"/>
+      </g>
+    </g>
+    <path class="layer" style="--d:-.12" d="M0 228 C 300 210 600 222 900 214 S 1300 220 1440 212 V260 H0Z" fill="var(--hill-3)"/>
+  </svg>
+</section>
+
+<main>
+  <div class="layout">
+    <div class="card">
+      <div class="legend">
+        <span><i style="background:var(--bd)"></i>บด</span>
+        <span><i style="background:var(--cbd)"></i>ชบด</span>
+        <span><i style="background:#0891b2"></i>ช</span>
+        <span><i style="background:#7c3aed"></i>E</span>
+        <span><i style="background:#0e9f6e"></i>M</span>
+        <span><i style="background:#475569"></i>ออกหน่วย</span>
+        <span><i style="background:var(--accent)"></i>วันหยุดราชการ</span>
+        <span><i style="background:#94a3b8"></i>วันทำการ</span>
+      </div>
+      <div class="grid" id="cal"></div>
+    </div>
+    <div class="card">
+      <h2>สรุปรายได้</h2>
+      <div class="seg noprint" role="tablist">
+        <button id="segM" class="on" onclick="setScope('m')">เดือนนี้</button>
+        <button id="segY" onclick="setScope('y')">ทั้งปี</button>
+      </div>
+      <div id="summary"></div>
+      <div class="rates" id="syncInfo"></div>
+    </div>
+  </div>
+</main>
+
+<!-- ลงเวร -->
+<dialog id="dayDlg"><div class="dlg">
+  <h3 id="dTitle"></h3>
+  <div class="sub" id="dSub"></div>
+  <div class="picker" id="picker"></div>
+  <div class="row">
+    <button id="unitBtn" class="grow unit-btn" onclick="pick('ออกหน่วย')">ออกหน่วย</button>
+    <button id="leaveBtn" class="grow leave-btn" onclick="pick('ลา')">ลา / ไม่ทำงาน</button>
+    <button class="danger" id="dClear" onclick="pick('')">ล้าง</button>
+  </div>
+  <div class="choice" id="choice" aria-live="polite"></div>
+  <label for="dNote">หมายเหตุ (ไม่บังคับ)</label>
+  <input type="text" id="dNote" placeholder="เช่น แลกเวรกับ..." oninput="showChoice()">
+  <div class="row">
+    <button class="grow" onclick="dayDlg.close()">ยกเลิก</button>
+    <button class="ok grow" id="okBtn" onclick="confirmDay()">ตกลง</button>
+  </div>
+  <div class="row" style="border-top:1px solid var(--line);padding-top:12px">
+    <input type="text" id="dHolName" class="grow" placeholder="ชื่อวันหยุด เช่น หยุดพิเศษ ครม." style="padding:10px 12px;border:1px solid var(--line);border-radius:12px;min-height:44px">
+    <button id="dHolBtn" onclick="doHoliday()"></button>
+  </div>
+</div></dialog>
+
+<!-- อัตรา -->
+<dialog id="rateDlg"><div class="dlg">
+  <h3>อัตราค่าเวร</h3>
+  <div class="sub">วันทำการ = จ–ศ ที่ไม่ใช่วันหยุดราชการ และไม่ได้กด "ลา"</div>
+  <div id="rateFields"></div>
+  <div class="row">
+    <button class="pri grow" onclick="doRates()">บันทึก</button>
+    <button onclick="rateDlg.close()">ยกเลิก</button>
+  </div>
+</div></dialog>
+
+<div id="loading">กำลังโหลด…</div>
+<div id="toast" role="status"></div>
+
+<script>
+const TH_M = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const DOW = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+const TYPES = [['บด','bd'],['ชบด','cbd'],['ช','ch'],['E','e'],['M','m']];
+const RATE_LABELS = { workday:'วันทำการ จ–ศ (บาท/วัน)', shift:'ค่าเวรต่อ 1 เวร (บาท)', bdN:'บด = กี่เวร', cbdN:'ชบด = กี่เวร', ch:'ช (บาท)', e:'E (บาท)', m:'M (บาท)', unit:'ออกหน่วย (บาท)', tax:'หักภาษี (%)', sso:'ประกันสังคม (บาท/เดือน)' };
+
+const now = new Date();
+const S = { y: now.getFullYear(), m: now.getMonth(), shifts: {}, hol: {}, synced: '',
+            rates: { workday:1200, shift:1200, bdN:2, cbdN:3, ch:1200, e:800, m:400, unit:1200, tax:10, sso:850 }, scope: 'm', cur: null };
+
+/* ---------- utils ---------- */
+const pad = n => String(n).padStart(2,'0');
+const ymd = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parse = k => { const [y,m,d] = k.split('-').map(Number); return new Date(y,m-1,d); };
+const isHol = k => !!S.hol[k];
+const baht = n => '฿' + Number(n).toLocaleString('th-TH');
+const thDate = k => { const d = parse(k); return 'วัน'+['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'][d.getDay()]
+                       +' '+d.getDate()+' '+TH_M[d.getMonth()]+' '+(d.getFullYear()+543); };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const typeOfCode = c => c==='ลา' ? 'leave' : c==='ออกหน่วย' ? 'unit' : (TYPES.find(t => c.startsWith(t[0]) && /^\d$/.test(c.slice(t[0].length))) || [,''])[1];
+const isWorkday = k => { const w = parse(k).getDay(); const s = S.shifts[k];
+  return w>=1 && w<=5 && !isHol(k) && !(s && codesOf(s.code).includes('ลา')); };
+function codesOf(str){ return String(str||'').split(',').map(x => x.trim()).filter(Boolean); }
+const codeLabel = (c, long) => (c==='ลา'||c==='ออกหน่วย') ? c : c.replace(/(\d)$/, long ? ' จุด $1' : ' $1');
+
+function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2400); }
+
+function call(fn, ...args){
+  const l = document.getElementById('loading'); l.textContent = 'กำลังบันทึก…'; l.style.display = 'flex';
+  return new Promise((res, rej) => google.script.run
+    .withSuccessHandler(r => { l.style.display='none'; res(r); })
+    .withFailureHandler(e => { l.style.display='none'; toast('ผิดพลาด: '+(e.message||e)); rej(e); })
+    [fn](...args));
+}
+
+function load(d){
+  S.shifts = d.shifts || {}; S.hol = d.holidays || {}; S.synced = d.synced || '';
+  S.rates = Object.assign(S.rates, d.rates || {});
+  render();
+}
+
+/* ---------- render calendar ---------- */
+function render(){
+  document.getElementById('title').textContent = TH_M[S.m] + ' ' + (S.y + 543);
+  let html = DOW.map((d,i) => `<div class="dow ${i===0||i===6?'we':''}">${d}</div>`).join('');
+  const first = new Date(S.y, S.m, 1);
+  const start = new Date(first); start.setDate(1 - first.getDay());
+  const last = new Date(S.y, S.m+1, 0);
+  const end = new Date(last); end.setDate(last.getDate() + (6 - last.getDay()));
+  const today = ymd(new Date());
+
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1)){
+    const k = ymd(d), s = S.shifts[k], w = d.getDay(), list = s ? codesOf(s.code) : [];
+    const cls = ['day', (w===0||w===6)?'we':'', isHol(k)?'hol':'', list.includes('ลา')?'leave':'',
+                 d.getMonth()!==S.m?'other':'', k===today?'today':''].join(' ');
+    html += `<div class="${cls}" role="button" tabindex="0" aria-label="${thDate(k)}${s?' '+s.code:''}"
+        onclick="openDay('${k}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDay('${k}')}">
+      <div class="num"><span>${d.getDate()}</span></div>
+      ${isHol(k) ? `<div class="hname" title="${esc(S.hol[k].name)}">${esc(S.hol[k].name)}</div>` : ''}
+      ${list.length ? `<div class="codes">${list.map(c => `<span class="code ${typeOfCode(c)}">${esc(codeLabel(c))}</span>`).join('')}</div>` : ''}
+      ${s && s.note ? `<div class="note" title="${esc(s.note)}">${esc(s.note)}</div>` : ''}
+      ${isWorkday(k) ? '<div class="wd">วันทำการ</div>' : ''}
+    </div>`;
+  }
+  document.getElementById('cal').innerHTML = html;
+  renderSummary();
+}
+
+/* ---------- summary ---------- */
+function calcMonth(y, m){ // m 0-11
+  const c = { workday:0, bd:0, cbd:0, ch:0, e:0, m:0, unit:0, leave:0 };
+  const days = new Date(y, m+1, 0).getDate();
+  for (let d=1; d<=days; d++){
+    const k = y+'-'+pad(m+1)+'-'+pad(d);
+    if (isWorkday(k)) c.workday++;
+    const s = S.shifts[k];
+    if (s) codesOf(s.code).forEach(code => { const t = typeOfCode(code); if (t in c) c[t]++; });
+  }
+  const R = S.rates;
+  const gross = c.workday*R.workday + c.bd*R.shift*R.bdN + c.cbd*R.shift*R.cbdN + c.ch*R.ch + c.e*R.e + c.m*R.m + c.unit*R.unit;
+  const tax = Math.round(gross * R.tax / 100);
+  const sso = gross ? R.sso : 0;
+  return { c, gross, tax, sso, net: gross - tax - sso };
+}
+
+function renderSummary(){
+  let months = [S.m];
+  if (S.scope==='y'){
+    const nowY = now.getFullYear(), nowM = now.getMonth();
+    const lastM = S.y < nowY ? 11 : S.y > nowY ? -1 : nowM;
+    months = []; for (let i=0;i<=lastM;i++) months.push(i);
+  }
+  const T = { c:{workday:0,bd:0,cbd:0,ch:0,e:0,m:0,unit:0,leave:0}, gross:0, tax:0, sso:0, net:0 };
+  months.forEach(m => { const r = calcMonth(S.y, m);
+    Object.keys(T.c).forEach(k => T.c[k] += r.c[k]); ['gross','tax','sso','net'].forEach(k => T[k] += r[k]); });
+  const R = S.rates;
+  const line2 = (label, n, rate, k) => `<tr><td>${label}</td><td>${n} × (${baht(rate)} × ${k})</td><td>${baht(n*rate*k)}</td></tr>`;
+  const line = (label, n, rate) => `<tr><td>${label}</td><td>${n} × ${baht(rate)}</td><td>${baht(n*rate)}</td></tr>`;
+  document.getElementById('summary').innerHTML = `
+    <div class="counts">
+      <span>วันทำการ ${T.c.workday}</span><span style="color:var(--bd)">บด ${T.c.bd}</span>
+      <span style="color:var(--cbd)">ชบด ${T.c.cbd}</span><span style="color:#0891b2">ช ${T.c.ch}</span><span style="color:#7c3aed">E ${T.c.e}</span>
+      <span style="color:#0e9f6e">M ${T.c.m}</span><span style="color:#475569">ออกหน่วย ${T.c.unit}</span>${T.c.leave?`<span style="color:var(--off)">ลา ${T.c.leave}</span>`:''}
+    </div>
+    <table class="breakdown">
+      ${line('วันทำการ', T.c.workday, R.workday)}
+      ${line2('บด', T.c.bd, R.shift, R.bdN)}
+      ${line2('ชบด', T.c.cbd, R.shift, R.cbdN)}
+      ${line('ช', T.c.ch, R.ch)}
+      ${line('E', T.c.e, R.e)}
+      ${line('M', T.c.m, R.m)}
+      ${line('ออกหน่วย', T.c.unit, R.unit)}
+      <tr class="sum"><td>รวม</td><td></td><td>${baht(T.gross)}</td></tr>
+      <tr class="neg"><td>หักภาษี ${R.tax}%</td><td></td><td>−${baht(T.tax)}</td></tr>
+      <tr class="neg"><td>ประกันสังคม</td><td>${S.scope==='y'?months.length+' เดือน':''}</td><td>−${baht(T.sso)}</td></tr>
+    </table>
+    <div class="net"><span>รับสุทธิ${S.scope==='y'?' (ถึงเดือนนี้)':''}</span><b>${baht(T.net)}</b></div>`;
+  const nHol = Object.keys(S.hol).filter(k => k.startsWith(S.y+'-')).length;
+  document.getElementById('syncInfo').textContent =
+    `วันหยุดราชการปี ${S.y+543}: ${nHol} วัน` + (S.synced ? ` · อัปเดตล่าสุด ${S.synced}` : ' · ยังไม่ได้อัปเดต');
+}
+
+function setScope(s){ S.scope = s;
+  document.getElementById('segM').classList.toggle('on', s==='m');
+  document.getElementById('segY').classList.toggle('on', s==='y');
+  renderSummary(); }
+function move(n){ S.m += n; if (S.m<0){S.m=11;S.y--;} if (S.m>11){S.m=0;S.y++;} render(); }
+function goToday(){ const d = new Date(); S.y = d.getFullYear(); S.m = d.getMonth(); render(); }
+
+/* ---------- day dialog ---------- */
+const dayDlg = document.getElementById('dayDlg');
+
+function openDay(k){
+  S.cur = k;
+  const s = S.shifts[k], code = s ? codesOf(s.code).join(' + ') : '';
+  document.getElementById('dTitle').textContent = thDate(k);
+  document.getElementById('dSub').textContent = (isHol(k) ? 'วันหยุดราชการ: ' + S.hol[k].name : isWorkday(k) ? 'วันทำการ' : 'วันหยุด')
+    + (code ? ' · ลงไว้: ' + code : ' · แตะเลือกเวร');
+  document.getElementById('picker').innerHTML = TYPES.map(([name, cls]) =>
+    `<div class="lab ${cls}">${name}</div>` + [1,2,3,4].map(n =>
+      `<button class="${cls}" data-code="${name}${n}" onclick="pick('${name}${n}')" aria-label="${name} จุด ${n}">${n}</button>`).join('')
+  ).join('');
+  document.getElementById('dClear').style.display = s ? '' : 'none';
+  S.orig = s ? codesOf(s.code) : []; S.sel = S.orig.slice();
+  document.getElementById('dNote').value = s ? s.note || '' : '';
+  const hn = document.getElementById('dHolName');
+  hn.value = ''; hn.style.display = isHol(k) ? 'none' : '';
+  document.getElementById('dHolBtn').textContent = isHol(k) ? 'ไม่ใช่วันหยุด' : 'ตั้งเป็นวันหยุดราชการ';
+  showChoice();
+  dayDlg.showModal();
+  const ttl = document.getElementById('dTitle'); ttl.tabIndex = -1; ttl.focus(); // ไม่ให้กรอบโฟกัสไปอยู่ที่ปุ่มแรกจนดูเหมือนถูกเลือก
+}
+
+const CODE_COLOR = { bd:'var(--bd)', cbd:'var(--cbd)', ch:'#0891b2', e:'#7c3aed', m:'#0e9f6e', unit:'#475569', leave:'var(--off)' };
+
+// เลือกไว้ก่อน ยังไม่บันทึก — เลือกได้หลายแถว (แถวละ 1 ปุ่ม) เช่น บด 3 + M 1 · "ลา" เลือกได้อย่างเดียว
+function pick(code){
+  if (!code){ S.sel = []; return showChoice(); }
+  if (code === 'ลา'){ S.sel = S.sel.includes('ลา') ? [] : ['ลา']; return showChoice(); }
+  let sel = S.sel.filter(c => c !== 'ลา');
+  if (sel.includes(code)) sel = sel.filter(c => c !== code);              // แตะซ้ำ = ยกเลิก
+  else { const t = typeOfCode(code); sel = sel.filter(c => typeOfCode(c) !== t); sel.push(code); } // แถวเดียวกันแทนที่
+  S.sel = sel; showChoice();
+}
+
+const sameSel = () => S.sel.slice().sort().join(',') === S.orig.slice().sort().join(',');
+
+function showChoice(){
+  document.querySelectorAll('#picker button').forEach(b => {
+    const on = S.sel.includes(b.dataset.code);
+    b.classList.toggle('on', on); b.setAttribute('aria-pressed', on);
+  });
+  [['leaveBtn','ลา'],['unitBtn','ออกหน่วย']].forEach(([id, c]) => {
+    const el = document.getElementById(id), on = S.sel.includes(c);
+    el.classList.toggle('on', on); el.setAttribute('aria-pressed', on);
+  });
+  const box = document.getElementById('choice');
+  if (S.sel.length){
+    box.innerHTML = `${sameSel() ? 'ลงไว้แล้ว' : 'จะบันทึกเป็น'} ` + S.sel.map(c =>
+      `<span class="chip" style="background:${CODE_COLOR[typeOfCode(c)]}">${esc(codeLabel(c, true))}</span>`).join('<span>+</span>');
+  } else {
+    box.innerHTML = S.orig.length ? `จะ<b style="color:var(--bad)">ล้าง</b>เวรวันนี้ (เดิม ${esc(S.orig.join(' + '))})` : 'ยังไม่ได้เลือก · แตะเลือกเวรด้านบน (เลือกได้หลายแถว เช่น บด + M)';
+  }
+  const note = document.getElementById('dNote').value.trim(), orig = (S.shifts[S.cur]||{}).note || '';
+  document.getElementById('okBtn').disabled = !S.sel.length && !S.orig.length && !note && !orig;
+}
+
+async function confirmDay(){
+  const note = document.getElementById('dNote').value.trim();
+  if (!S.sel.length && S.orig.length && !confirm('ล้างเวรวันนี้?')) return;
+  const code = S.sel.join(',');
+  load(await call('setShift', S.cur, code, code ? note : ''));
+  dayDlg.close(); toast(code ? 'บันทึก ' + S.sel.join(' + ') + ' แล้ว' : 'ล้างแล้ว');
+}
+
+async function doHoliday(){
+  if (isHol(S.cur) && !confirm(`ยกเลิกวันหยุด "${S.hol[S.cur].name}"?`)) return;
+  load(await call('toggleHoliday', S.cur, document.getElementById('dHolName').value.trim() || 'วันหยุดพิเศษ'));
+  dayDlg.close(); toast('อัปเดตวันหยุดแล้ว');
+}
+
+async function doSync(){ const r = await call('syncHolidaysNow'); load(r); toast(r.message || 'อัปเดตแล้ว'); }
+
+/* ---------- rates ---------- */
+const rateDlg = document.getElementById('rateDlg');
+function openRates(){
+  document.getElementById('rateFields').innerHTML = Object.keys(RATE_LABELS).map(k =>
+    `<label for="r_${k}">${RATE_LABELS[k]}</label><input type="number" id="r_${k}" min="0" step="1" value="${S.rates[k]}">`).join('');
+  rateDlg.showModal();
+}
+async function doRates(){
+  const r = {}; Object.keys(RATE_LABELS).forEach(k => r[k] = +document.getElementById('r_'+k).value || 0);
+  load(await call('saveRates', r)); rateDlg.close(); toast('บันทึกอัตราแล้ว');
+}
+
+/* ---------- hero parallax ---------- */
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const hero = document.querySelector('.hero'); let ticking = false;
+  addEventListener('scroll', () => { if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { const y = Math.min(scrollY, 600); hero.style.setProperty('--p', -y); ticking = false; }); }, {passive:true});
+})();
+
+/* ---------- start ---------- */
+document.getElementById('loading').style.display = 'flex';
+google.script.run
+  .withSuccessHandler(d => { document.getElementById('loading').style.display='none'; load(d); })
+  .withFailureHandler(e => { document.getElementById('loading').textContent = 'โหลดไม่สำเร็จ: ' + (e.message||e); })
+  .getAll();
+</script>
+</body>
+</html>
